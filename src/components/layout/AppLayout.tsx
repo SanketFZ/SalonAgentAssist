@@ -1,6 +1,7 @@
+
 import Link from "next/link";
 import {
-  Home,
+  Home, // Added Home icon
   BrainCircuit,
   UserCheck,
   PanelLeft,
@@ -20,6 +21,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <TooltipProvider>
+             {/* Added Home Link */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="sr-only">Home</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Home</TooltipContent>
+            </Tooltip>
+            {/* End Added Home Link */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -58,6 +73,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
+                 {/* Added Home Link */}
+                 <Link
+                  href="/"
+                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                 >
+                   <Home className="h-5 w-5" />
+                   Home
+                 </Link>
+                 {/* End Added Home Link */}
                 <Link
                   href="/supervisor"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
