@@ -1,6 +1,6 @@
 "use client"
 
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/client/hooks/use-toast" // Update import path
 import {
   Toast,
   ToastClose,

@@ -15,7 +15,9 @@ export interface SupervisorMessage {
  * @returns A promise that resolves when the message is sent.
  */
 export async function sendMessageToSupervisor(message: SupervisorMessage): Promise<void> {
-  // TODO: Implement this by calling a webhook.
+  // TODO: Implement this by calling a webhook or another notification mechanism.
+  // This should only run on the server.
 
-  console.log(`Simulating sending message to supervisor: ${message.content}`);
+  console.log(`[SERVER SERVICE] Simulating sending message to supervisor: ${message.content}`);
+   await new Promise(resolve => setTimeout(resolve, 100)); // Simulate API call time
 }

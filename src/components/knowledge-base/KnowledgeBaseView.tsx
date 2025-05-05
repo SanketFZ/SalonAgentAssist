@@ -12,8 +12,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { KnowledgeBaseEntry } from "@/types";
-import { getKnowledgeBaseEntries } from "@/lib/db"; // Import DB function
-import { useToast } from "@/hooks/use-toast";
+import { getKnowledgeBaseEntries } from "@/server/lib/db"; // Update DB function import path
+import { useToast } from "@/client/hooks/use-toast"; // Update useToast hook import path
 import { format } from "date-fns";
 import { BrainCircuit } from "lucide-react"; // Import icon
 
@@ -26,6 +26,8 @@ export default function KnowledgeBaseView() {
     const fetchEntries = async () => {
       setIsLoading(true);
       try {
+        // Fetching data is a server-side action, but the component itself is client-side.
+        // The function `getKnowledgeBaseEntries` is marked with 'use server'.
         const data = await getKnowledgeBaseEntries();
         setEntries(data);
       } catch (error) {
@@ -119,7 +121,8 @@ export default function KnowledgeBaseView() {
                     <TableRow key={entry.id}>
                     <TableCell className="font-medium">{entry.question}</TableCell>
                     <TableCell>{entry.answer}</TableCell>
-                    <TableCell>{format(new Date(entry.updatedAt), "PPp")}</TableCell>
+                     {/* Ensure updatedAt exists before formatting */}
+                    <TableCell>{entry.updatedAt ? format(new Date(entry.updatedAt), "PPp") : 'N/A'}</TableCell>
                     </TableRow>
                 ))}
                 </TableBody>

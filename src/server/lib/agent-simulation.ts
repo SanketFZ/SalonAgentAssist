@@ -1,6 +1,6 @@
-import { receiveCall, respondToCall, hangUpCall, Call } from "@/services/livekit";
-import { getAnswerFromKnowledgeBase, createHelpRequest } from "@/lib/db";
-import { sendMessageToSupervisor } from "@/services/supervisor"; // Although simulated in db.ts for now
+import { receiveCall, respondToCall, hangUpCall, Call } from "@/server/services/livekit";
+import { getAnswerFromKnowledgeBase, createHelpRequest } from "@/server/lib/db";
+import { sendMessageToSupervisor } from "@/server/services/supervisor"; // Although simulated in db.ts for now
 
 /**
  * Simulates the AI agent processing an incoming call.
@@ -58,4 +58,3 @@ console.log("[AGENT] Prompt: You are a helpful AI assistant for 'The Cutting Edg
 
 // Start the simulation (optional, can be triggered elsewhere)
 // processIncomingCall();
-

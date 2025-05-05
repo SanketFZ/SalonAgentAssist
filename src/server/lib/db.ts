@@ -1,4 +1,6 @@
-import { db } from "@/lib/firebase";
+"use server"; // Ensure this runs only on the server
+
+import { db } from "@/server/lib/firebase"; // Adjust import path
 import {
   collection,
   addDoc,
@@ -14,6 +16,8 @@ import {
   serverTimestamp, // Use serverTimestamp for consistency
 } from "firebase/firestore";
 import type { HelpRequest, KnowledgeBaseEntry, HelpRequestStatus } from "@/types";
+import { sendMessageToSupervisor } from "@/server/services/supervisor"; // Adjust import path
+import { sendTextMessage } from "@/server/services/twilio"; // Adjust import path
 
 // Firestore collection references
 const helpRequestsCollection = collection(db, "helpRequests");
@@ -37,7 +41,10 @@ export const createHelpRequest = async (callId: string, callerId: string, questi
   // Construct the HelpRequest object to return (createdAt will be null until server confirms)
   const newRequest: HelpRequest = {
     id: docRef.id,
-    ...newRequestData,
+    callId: newRequestData.callId,
+    callerId: newRequestData.callerId,
+    question: newRequestData.question,
+    status: newRequestData.status,
      createdAt: Date.now(), // Use local time temporarily, Firestore value is the source of truth
      resolvedAt: undefined, // Ensure optional fields are handled
      supervisorAnswer: undefined,
@@ -198,7 +205,8 @@ export const addOrUpdateKnowledgeBaseEntry = async (question: string, answer: st
         console.log(`[DB] Added new Knowledge Base entry in Firestore: ${docRef.id} for question: "${question}"`);
         return {
             id: docRef.id,
-            ...newEntryData,
+            question: newEntryData.question,
+            answer: newEntryData.answer,
             createdAt: Date.now(), // Use local time temporarily
             updatedAt: Date.now(), // Use local time temporarily
         };
@@ -222,11 +230,15 @@ export const getAnswerFromKnowledgeBase = async (question: string): Promise<stri
 async function simulateSupervisorNotification(request: HelpRequest) {
     // In a real app, this would call sendMessageToSupervisor
     console.log(`[SIMULATION] Supervisor Notified: Help needed for request ${request.id} - Question: "${request.question}" from ${request.callerId}`);
+    // Replace simulation with actual call if needed:
+    // await sendMessageToSupervisor({ content: `Help needed for request ${request.id}: ${request.question}` });
 }
 
 async function simulateCallerNotification(callerId: string, answer: string) {
      // In a real app, this would call sendTextMessage via Twilio or similar
     console.log(`[SIMULATION] Caller ${callerId} Notified: "${answer}"`);
+    // Replace simulation with actual call if needed:
+    // await sendTextMessage(callerId, answer);
 }
 
 
