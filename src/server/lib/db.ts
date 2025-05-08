@@ -56,29 +56,34 @@ export const createHelpRequest = async (callId: string, callerId: string, questi
 };
 
 export const getHelpRequests = async (status?: HelpRequestStatus): Promise<HelpRequest[]> => {
-  let q;
-  if (status) {
-    q = query(helpRequestsCollection, where("status", "==", status), orderBy("createdAt", "desc"));
-  } else {
-    q = query(helpRequestsCollection, orderBy("createdAt", "desc"));
-  }
+  try {
+    let q;
+    if (status) {
+      q = query(helpRequestsCollection, where("status", "==", status), orderBy("createdAt", "desc"));
+    } else {
+      q = query(helpRequestsCollection, orderBy("createdAt", "desc"));
+    }
 
-  const querySnapshot = await getDocs(q);
-  const requests: HelpRequest[] = [];
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    requests.push({
-      id: doc.id,
-      callId: data.callId,
-      callerId: data.callerId,
-      question: data.question,
-      status: data.status,
-      createdAt: (data.createdAt as Timestamp)?.toMillis() || Date.now(), // Handle potential null/pending server timestamp
-      resolvedAt: (data.resolvedAt as Timestamp)?.toMillis(), // Optional
-      supervisorAnswer: data.supervisorAnswer, // Optional
+    const querySnapshot = await getDocs(q);
+    const requests: HelpRequest[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      requests.push({
+        id: doc.id,
+        callId: data.callId,
+        callerId: data.callerId,
+        question: data.question,
+        status: data.status,
+        createdAt: (data.createdAt as Timestamp)?.toMillis() || Date.now(), // Handle potential null/pending server timestamp
+        resolvedAt: (data.resolvedAt as Timestamp)?.toMillis(), // Optional
+        supervisorAnswer: data.supervisorAnswer, // Optional
+      });
     });
-  });
-  return requests;
+    return requests;
+  } catch (error) {
+    console.error("[DB] Error fetching help requests:", error);
+    return []; // Return empty array in case of error
+  }
 };
 
 export const getHelpRequestById = async (id: string): Promise<HelpRequest | undefined> => {
@@ -86,20 +91,25 @@ export const getHelpRequestById = async (id: string): Promise<HelpRequest | unde
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const data = docSnap.data();
-    return {
-      id: docSnap.id,
-      callId: data.callId,
-      callerId: data.callerId,
-      question: data.question,
-      status: data.status,
-      createdAt: (data.createdAt as Timestamp)?.toMillis() || Date.now(),
-      resolvedAt: (data.resolvedAt as Timestamp)?.toMillis(),
-      supervisorAnswer: data.supervisorAnswer,
-    };
+    try {
+      const data = docSnap.data();
+      return {
+        id: docSnap.id,
+        callId: data.callId,
+        callerId: data.callerId,
+        question: data.question,
+        status: data.status,
+        createdAt: (data.createdAt as Timestamp)?.toMillis() || Date.now(),
+        resolvedAt: (data.resolvedAt as Timestamp)?.toMillis(),
+        supervisorAnswer: data.supervisorAnswer,
+      };
+    } catch (error) {
+      console.error(`[DB] Error processing data for help request ${id}:`, error);
+      return undefined; // Indicate processing failure
+    }
   } else {
     return undefined;
-  }
+  } // Firestore error is caught by the caller
 };
 
 export const resolveHelpRequest = async (id: string, supervisorAnswer: string): Promise<HelpRequest | undefined> => {
@@ -154,23 +164,29 @@ export const resolveHelpRequest = async (id: string, supervisorAnswer: string): 
 // --- Knowledge Base Operations ---
 
 export const getKnowledgeBaseEntries = async (): Promise<KnowledgeBaseEntry[]> => {
-  const q = query(knowledgeBaseCollection, orderBy("updatedAt", "desc"));
-  const querySnapshot = await getDocs(q);
-  const entries: KnowledgeBaseEntry[] = [];
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    entries.push({
-      id: doc.id,
-      question: data.question,
-      answer: data.answer,
-      createdAt: (data.createdAt as Timestamp).toMillis(),
-      updatedAt: (data.updatedAt as Timestamp).toMillis(),
+  try {
+    const q = query(knowledgeBaseCollection, orderBy("updatedAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    const entries: KnowledgeBaseEntry[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      entries.push({
+        id: doc.id,
+        question: data.question,
+        answer: data.answer,
+        createdAt: (data.createdAt as Timestamp).toMillis(),
+        updatedAt: (data.updatedAt as Timestamp).toMillis(),
+      });
     });
-  });
-  return entries;
+    return entries;
+  } catch (error) {
+    console.error("[DB] Error fetching knowledge base entries:", error);
+    return []; // Return empty array in case of error
+  }
 };
 
 export const addOrUpdateKnowledgeBaseEntry = async (question: string, answer: string): Promise<KnowledgeBaseEntry> => {
+  try {
     // Query for existing entry based on question
     const q = query(knowledgeBaseCollection, where("question", "==", question), limit(1));
     const querySnapshot = await getDocs(q);
@@ -184,7 +200,7 @@ export const addOrUpdateKnowledgeBaseEntry = async (question: string, answer: st
             answer: answer,
             updatedAt: now,
         });
-        console.log(`[DB] Updated Knowledge Base entry in Firestore for question: "${question}"`);
+        console.log(`[DB] Updated Knowledge Base entry in Firestore for question: "${question}"`); // Log success
         const data = existingDoc.data();
         return {
             id: existingDoc.id,
@@ -201,19 +217,25 @@ export const addOrUpdateKnowledgeBaseEntry = async (question: string, answer: st
             createdAt: now,
             updatedAt: now,
         };
-        const docRef = await addDoc(knowledgeBaseCollection, newEntryData);
+        const docRef = await addDoc(knowledgeBaseCollection, newEntryData); // Use await
         console.log(`[DB] Added new Knowledge Base entry in Firestore: ${docRef.id} for question: "${question}"`);
         return {
             id: docRef.id,
             question: newEntryData.question,
             answer: newEntryData.answer,
-            createdAt: Date.now(), // Use local time temporarily
-            updatedAt: Date.now(), // Use local time temporarily
+            createdAt: Date.now(), // Use local time temporarily, Firestore value is the source of truth
+            updatedAt: Date.now(), // Use local time temporarily, Firestore value is the source of truth
         };
     }
+  } catch (error) {
+    console.error(`[DB] Error adding or updating knowledge base entry for question "${question}":`, error);
+    // Return a default KnowledgeBaseEntry structure indicating failure, or rethrow/handle as appropriate
+    throw error; // Re-throwing for now to indicate failure to the caller
+  }
 };
 
 export const getAnswerFromKnowledgeBase = async (question: string): Promise<string | null> => {
+  try {
     const q = query(knowledgeBaseCollection, where("question", "==", question), limit(1));
     const querySnapshot = await getDocs(q);
 
@@ -222,6 +244,10 @@ export const getAnswerFromKnowledgeBase = async (question: string): Promise<stri
         return doc.data().answer as string;
     } else {
         return null;
+    }
+  } catch (error) {
+    console.error(`[DB] Error getting answer from knowledge base for question "${question}":`, error);
+    return null; // Return null in case of error
     }
 }
 
@@ -242,8 +268,4 @@ async function simulateCallerNotification(callerId: string, answer: string) {
 }
 
 
-// --- Remove Pre-population ---
-// Data is now persistent in Firestore, so pre-population is removed.
-// (async () => {
-//   // Removed pre-population logic
-// })();
+

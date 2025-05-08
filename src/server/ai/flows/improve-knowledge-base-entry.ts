@@ -32,7 +32,9 @@ const improveKnowledgeBaseEntryPrompt = ai.definePrompt({
   name: 'improveKnowledgeBaseEntryPrompt',
   input: {
     schema: z.object({
-      originalEntry: z.string().describe('The original knowledge base entry representing the desired style.'),
+      originalEntry: z
+      .string()
+      .describe('The original knowledge base entry representing the desired style.'),
       editedEntry: z.string().describe('The new knowledge base entry content provided by the user.'),
     }),
   },
