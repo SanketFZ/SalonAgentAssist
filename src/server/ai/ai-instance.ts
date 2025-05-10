@@ -1,4 +1,3 @@
-'use server';
 
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
@@ -15,6 +14,9 @@ if (!googleApiKey) {
   // This log is to provide an earlier, more direct warning to the developer.
 }
 
+// This 'ai' object is a configuration instance for Genkit.
+// It is used by other server-side modules (flows) that are marked with 'use server'.
+// This file itself does not need to be marked 'use server' as it doesn't directly export Server Actions.
 export const ai = genkit({
   promptDir: './prompts', // Genkit prompt files, if any
   plugins: [
@@ -28,3 +30,4 @@ export const ai = genkit({
   logLevel: 'debug', // Optional: Set log level for development
   enableTracing: true, // Optional: Enable tracing for debugging
 });
+
