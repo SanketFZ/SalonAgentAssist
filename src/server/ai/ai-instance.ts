@@ -27,7 +27,7 @@ export const ai = genkit({
   ],
   // Define default model if needed, or specify in each flow/prompt
   model: 'googleai/gemini-2.0-flash', // Default model for Genkit instance
-  logLevel: 'debug', // Optional: Set log level for development
-  enableTracing: true, // Optional: Enable tracing for debugging
+  // logLevel: 'debug', // Optional: Set log level for development
+  // enableTracing: true, // Optional: Enable tracing for debugging
 });
 
