@@ -40,8 +40,8 @@ next-env.d.ts
 .genkit/*
 .env*
 
-/.vscode /
+.vscode 
 
-/.idx /
+.idx
 
-/.docs/
+.docs
