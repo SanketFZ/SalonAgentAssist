@@ -8,7 +8,7 @@
 export async function sendTextMessage(phoneNumber: string, message: string): Promise<void> {
   // TODO: Implement this by calling Twilio API.
   // This requires setting up Twilio credentials securely on the server.
-  // This should only run on the server.
+
 
   console.log(`[SERVER SERVICE] Simulating sending text message to ${phoneNumber}: ${message}`);
   await new Promise(resolve => setTimeout(resolve, 400)); // Simulate API call time
