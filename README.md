@@ -4,15 +4,15 @@ This is a Next.js application demonstrating a "human-in-the-loop" system for AI 
 
 ## Features
 
-*   **Supervisor Dashboard**: View pending requests, provide answers, and see request history.
-*   **Knowledge Base**: Automatically updated with supervisor-approved answers.
-*   **AI-Powered Assistance**:
+*   Supervisor Dashboard: View pending requests, provide answers, and see request history.
+*   Knowledge Base: Automatically updated with supervisor-approved answers.
+*   AI-Powered Assistance:
     *   Suggests answers to supervisors based on the knowledge base.
     *   Summarizes request context for supervisors.
     *   Improves the formatting of supervisor answers before saving them to the knowledge base.
-*   **Simulated Agent Interaction**: Basic simulation of an AI agent receiving calls and either answering or escalating.
-*   **Firebase Integration**: Uses Firestore as the database for storing help requests and knowledge base entries.
-*   **Genkit Integration**: Leverages Google's Genkit for AI flow management and interaction with generative AI models.
+*   Simulated Agent Interaction: Basic simulation of an AI agent receiving calls and either answering or escalating.
+*   Firebase Integration: Uses Firestore as the database for storing help requests and knowledge base entries.
+*   Genkit Integration: Leverages Google's Genkit for AI flow management and interaction with generative AI models.
 
 ## Prerequisites
 
@@ -22,21 +22,21 @@ Before you begin, ensure you have the following installed:
 
 ## Project Setup
 
-1.  **Clone the repository (if you haven't already):**
+1.  Clone the repository (if you haven't already):
     ```bash
     git clone <repository-url>
     cd <repository-directory>
     ```
 
-2.  **Install dependencies:**
+2.  Install dependencies:
     ```bash
     npm install
     # or
     # yarn install
     ```
 
-3.  **Set up Environment Variables:**
-    Create a `.env` file in the root of your project. This file will store your API keys and Firebase configuration. **Do not commit this file to version control.**
+3.  Set up Environment Variables:
+    Create a `.env` file in the root of your project. This file will store your API keys and Firebase configuration. Do not commit this file to version control.
 
     Copy the following into your `.env` file and replace the placeholder values with your actual Firebase project credentials and Google Generative AI API key:
 
@@ -55,7 +55,7 @@ Before you begin, ensure you have the following installed:
     GOOGLE_GENAI_API_KEY="YOUR_GOOGLE_GENERATIVE_AI_API_KEY"
     ```
 
-    **How to get Firebase credentials:**
+    How to get Firebase credentials:
     *   Go to your [Firebase Console](https://console.firebase.google.com/).
     *   Select your project (or create a new one).
     *   Go to Project settings (click the gear icon).
@@ -63,14 +63,14 @@ Before you begin, ensure you have the following installed:
     *   If you don't have a web app, create one.
     *   The Firebase SDK setup and configuration snippet will contain your `apiKey`, `authDomain`, `projectId`, etc.
 
-    **How to get Google Generative AI API Key:**
+    How to get Google Generative AI API Key:
     *   Visit [Google AI Studio](https://aistudio.google.com/app/apikey) or the Google Cloud Console for your project.
     *   Create or retrieve an API key enabled for the Generative Language API (e.g., Gemini).
 
-4.  **Set up Firebase Firestore:**
+4.  Set up Firebase Firestore:
     *   In your Firebase project, navigate to "Firestore Database" in the console.
     *   Click "Create database".
-    *   Choose "Start in **test mode**" for initial development (for easier access without complex security rules). For production, you'll need to set up proper security rules.
+    *   Choose "Start in test mode" for initial development (for easier access without complex security rules). For production, you'll need to set up proper security rules.
     *   Select a Cloud Firestore location.
     *   The application will automatically create the necessary collections (`helpRequests`, `knowledgeBase`) when data is first written to them. You do not need to create them manually.
 
@@ -78,7 +78,7 @@ Before you begin, ensure you have the following installed:
 
 The application consists of two main parts: the Next.js frontend/backend and the Genkit AI flows.
 
-1.  **Start the Next.js Development Server:**
+1.  Start the Next.js Development Server:
     This server handles the web interface and API routes.
     ```bash
     npm run dev
@@ -87,8 +87,8 @@ The application consists of two main parts: the Next.js frontend/backend and the
     ```
     By default, this will start the application on `http://localhost:9002`.
 
-2.  **Start the Genkit Development Server (Optional, for flow inspection):**
-    If you want to inspect or test your Genkit flows directly using the Genkit Developer UI, run this command in a **separate terminal**:
+2.  Start the Genkit Development Server (Optional, for flow inspection):
+    If you want to inspect or test your Genkit flows directly using the Genkit Developer UI, run this command in a separate terminal:
     ```bash
     npm run genkit:dev
     # or
@@ -98,9 +98,9 @@ The application consists of two main parts: the Next.js frontend/backend and the
 
 ## Accessing the Application
 
-*   **Landing Page**: Open your browser and navigate to `http://localhost:9002`
-*   **Supervisor Dashboard**: `http://localhost:9002/supervisor`
-*   **Knowledge Base**: `http://localhost:9002/knowledge-base`
+*   Landing Page: Open your browser and navigate to `http://localhost:9002`
+*   Supervisor Dashboard: `http://localhost:9002/supervisor`
+*   Knowledge Base: `http://localhost:9002/knowledge-base`
 
 ## Simulating Agent Interactions
 
@@ -142,16 +142,16 @@ The project includes a basic simulation for an AI agent receiving calls:
 
 ## Key Technologies
 
-*   **Next.js**: React framework for server-side rendering and static site generation.
-*   **TypeScript**: Superset of JavaScript for type safety.
-*   **Tailwind CSS**: Utility-first CSS framework.
-*   **ShadCN UI**: Re-usable UI components.
-*   **Firebase (Firestore)**: NoSQL cloud database.
-*   **Genkit**: Google's toolkit for building AI-powered applications.
-*   **Lucide React**: Icon library.
+*   Next.js: React framework for server-side rendering and static site generation.
+*   TypeScript: Superset of JavaScript for type safety.
+*   Tailwind CSS: Utility-first CSS framework.
+*   ShadCN UI: Re-usable UI components.
+*   Firebase (Firestore): NoSQL cloud database.
+*   Genkit: Google's toolkit for building AI-powered applications.
+*   Lucide React: Icon library.
 
 ## Troubleshooting
 
-*   **`GOOGLE_GENAI_API_KEY is not set`**: Ensure you have correctly set `GOOGLE_GENAI_API_KEY` in your `.env` file and that the Next.js server was restarted after adding it.
-*   **Firebase Permission Errors**: If you encounter permission errors when interacting with Firestore, ensure your Firestore security rules are correctly set up. For development, "test mode" allows open access. For production, restrict access appropriately.
-*   **Port Conflicts**: If `localhost:9002` (Next.js) or `localhost:4000` (Genkit) are in use, modify the `dev` or `genkit:dev` scripts in `package.json` to use different ports (e.g., `next dev -p <new_port>`).
+*   `GOOGLE_GENAI_API_KEY is not set`: Ensure you have correctly set `GOOGLE_GENAI_API_KEY` in your `.env` file and that the Next.js server was restarted after adding it.
+*   Firebase Permission Errors: If you encounter permission errors when interacting with Firestore, ensure your Firestore security rules are correctly set up. For development, "test mode" allows open access. For production, restrict access appropriately.
+*   Port Conflicts: If `localhost:9002` (Next.js) or `localhost:4000` (Genkit) are in use, modify the `dev` or `genkit:dev` scripts in `package.json` to use different ports (e.g., `next dev -p <new_port>`).
